@@ -19,6 +19,9 @@ app.use(express.json());
 app.use("/", express.static(path.join(__dirname, "public")));
 // this is to evaluate the get request of root route "/"
 app.use("/", require("./routes/root"));
+
+app.use("/users", require("./routes/userRoutes"));
+
 //this is a 404 handler, if the request isnt dealtup with until now and there is no respone then this will get called.
 app.all("*", (req, res) => {
   res.status(404);
