@@ -9,7 +9,9 @@ const bcrypt = require("bcrypt");
 // we will use async handler so we dont have to use try catch everywhere, to do that we just need to wrap the async function inside async handler
 const getAllUsers = asyncHandler(async (req, res) => {
   const users = await User.find().select("-password").lean();
-  if (!users) return res.status(400).json({ message: "No Users were found" });
+  if (!users?.length) {
+    return res.status(400).json({ message: "No Users were found" });
+  }
 
   res.json(users);
 });
@@ -100,7 +102,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 
   const notes = await Note.findOne({ user: id }).lean().exec();
 
-  if (notes?.length) {
+  if (notes) {
     return res.status(409).json({ message: "User has assigned notes" });
   }
 
