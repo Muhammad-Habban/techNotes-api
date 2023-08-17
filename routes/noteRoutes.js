@@ -8,3 +8,5 @@ router
   .post(noteControllers.createNewNote)
   .patch(noteControllers.updateNote)
   .delete(noteControllers.deleteNote);
+
+module.exports = router;

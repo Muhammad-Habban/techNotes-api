@@ -22,11 +22,21 @@ const noteSchema = new mongoose.Schema({
     default: false,
   },
 });
-
-noteSchema.plugin(AutoIncrement, {
-  inc_field: "ticket",
-  start_seq: 500,
-  id: "ticketNums",
-});
+// Before saving a new note, find the latest ticket number and increment it
+// noteSchema.pre("save", async function (next) {
+//   const Note = mongoose.model("Note");
+//   const latestNote = await Note.findOne({}, { ticket: 1 }).sort({ ticket: -1 });
+//   if (latestNote) {
+//     this.ticket = latestNote.ticket + 1;
+//   } else {
+//     this.ticket = 1; // If no notes exist, start from 1
+//   }
+//   next();
+// });
+// // noteSchema.plugin(AutoIncrement, {
+// //   inc_field: "ticket",
+// //   start_seq: 500,
+// //   id: "ticketNums",
+// // });
 
 module.exports = mongoose.model("Note", noteSchema);

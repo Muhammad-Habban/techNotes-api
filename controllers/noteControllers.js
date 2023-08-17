@@ -1,11 +1,15 @@
 const asyncHandler = require("express-async-handler");
 const Note = require("../models/Note");
 const User = require("../models/Users");
+const { default: mongoose } = require("mongoose");
+const { ObjectID } = require("bson");
+const { ObjectId } = require("bson");
+const { truncate } = require("fs/promises");
 
 // GET all notes
 // GET /notes
 const getAllNotes = asyncHandler(async (req, res) => {
-  const notes = Note.find().lean();
+  const notes = await Note.find().lean();
   if (!notes?.length) {
     return res.status(400).json({ message: "No NOTES Found" });
   }
@@ -20,24 +24,24 @@ const createNewNote = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "All fields are required" });
   }
 
-  const user = await User.findOne({ username }).exec();
-  if (!user) {
+  const userFound = await User.findOne({ username }).exec();
+  if (!userFound) {
     return res
       .status(400)
       .json({ message: `No user Found with name : ${username}` });
   }
-
+  const user = userFound.id;
   const newNote = {
     user,
     title,
     text,
   };
-
-  const creatingNote = Note.create(newNote);
-  if (!creatingNote) {
-    return res.status(400).json({ message: "Could Not creat the note" });
+  const creatingNote = await Note.create(newNote);
+  if (creatingNote) {
+    res.status(200).json({ message: "Note Created Successfully" });
+  } else {
+    res.status(400).json({ message: "Could Not creat the note" });
   }
-  res.status(200).json({ message: "Note Created Successfully" });
 });
 
 // Update Note
@@ -62,19 +66,18 @@ const updateNote = asyncHandler(async (req, res) => {
   }
 
   if (username) {
-    const user = await User.findOne({ username }).exec();
-    if (!user) {
+    const userFound = await User.findOne({ username }).exec();
+    if (!userFound) {
       return res
         .status(400)
         .json({ message: `No user was found with name : ${username}` });
     }
     // if user was found
+    const user = userFound.id;
     note.user = user;
   }
   const updatedNote = await note.save();
-  res
-    .status(200)
-    .json({ message: `Note was updated successfully : ${updateNote}` });
+  res.status(200).json({ message: "Note was updated successfully" });
 });
 
 // Delete Note
