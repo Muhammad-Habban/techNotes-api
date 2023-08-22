@@ -9,7 +9,8 @@ const { truncate } = require("fs/promises");
 // GET all notes
 // GET /notes
 const getAllNotes = asyncHandler(async (req, res) => {
-  const notes = await Note.find().lean();
+  // I used "populate" here because We need full user instead of its id to display the Owner's name
+  const notes = await Note.find().populate("user").lean();
   if (!notes?.length) {
     return res.status(400).json({ message: "No NOTES Found" });
   }

@@ -8,6 +8,7 @@ const connectDB = require("./config/dbConn");
 const { logger } = require("./middleware/logger");
 const { logEvents } = require("./middleware/logger");
 const errorHandler = require("./middleware/errorHandler");
+const cors = require("cors");
 // const { error } = require("console");
 // connect database.
 connectDB();
@@ -15,6 +16,8 @@ connectDB();
 app.use(logger);
 // using express.json(), this is a JSON parser
 app.use(express.json());
+// using CORS to allow public API Access
+app.use(cors());
 //using express.static for static files
 app.use("/", express.static(path.join(__dirname, "public")));
 // this is to evaluate the get request of root route "/"
