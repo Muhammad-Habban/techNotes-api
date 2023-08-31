@@ -22,6 +22,8 @@ app.use(cors());
 app.use("/", express.static(path.join(__dirname, "public")));
 // this is to evaluate the get request of root route "/"
 app.use("/", require("./routes/root"));
+// this is to evaluate requests for authorization
+app.use("/auth", require("./routes/authRoutes"));
 // this is to evaluate all http request regarding "/users"
 app.use("/users", require("./routes/userRoutes"));
 
