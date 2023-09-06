@@ -48,7 +48,7 @@ const createNewNote = asyncHandler(async (req, res) => {
 // Update Note
 // patch /notes
 const updateNote = asyncHandler(async (req, res) => {
-  const { title, text, id, username } = req.body;
+  const { title, text, id, username, completed } = req.body;
   if (!id) {
     return res.status(400).json({ message: "ID is required" });
   }
@@ -64,6 +64,10 @@ const updateNote = asyncHandler(async (req, res) => {
 
   if (title) {
     note.title = title;
+  }
+
+  if (completed) {
+    note.completed = completed;
   }
 
   if (username) {

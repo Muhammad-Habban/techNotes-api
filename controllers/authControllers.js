@@ -44,7 +44,7 @@ const login = asyncHandler(async (req, res) => {
     secure: true, //https
     sameSite: "None", //cross-site cookie }
   });
-
+  console.log(accessToken);
   res.json({ accessToken });
 });
 
@@ -85,8 +85,10 @@ const refresh = (req, res) => {
 
 const logout = (req, res) => {
   // delete Cookie
+  console.log(req);
   const cookies = req.headers.cookie;
-  if (!cookies) return res.status(401).json({ message: "Unauthorized" });
+  console.log(cookies);
+  if (!cookies) return res.sendStatus(204);
   res.clearCookie("jwt", {
     httpOnly: true,
     secure: true,
